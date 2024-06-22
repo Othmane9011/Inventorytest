@@ -1,0 +1,1 @@
+Ceci est un projet pour integrer l'ia dans mon code
