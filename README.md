@@ -41,8 +41,12 @@
     ```sh
     npm install
     ```
+3. **Configure ORY**;
+```export ORY_SDK_URL=https://great-bouman-yxwvgjdn52.projects.oryapis.com
+   npx @ory/cli tunnel --dev http://localhost:3000
+   ```
 
-3. **Start the React application**:
+4. **Start the React application**:
 
     ```sh
     npm start

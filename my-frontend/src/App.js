@@ -1,63 +1,79 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import logo from "./logo.svg";
+import "./App.css";
+import { FrontendApi, Configuration } from "@ory/client";
+import Home from "./Home";
+import Login from "./Login";
+
+const basePath = process.env.REACT_APP_ORY_URL || "http://localhost:4000";
+const ory = new FrontendApi(
+  new Configuration({
+    basePath,
+    baseOptions: {
+      withCredentials: true,
+    },
+  })
+);
 
 function App() {
-    const [message, setMessage] = useState('');
-    const [text, setText] = useState('');
+  const [session, setSession] = useState(null);
+  const [logoutUrl, setLogoutUrl] = useState();
 
-    const callApi = () => {
-        fetch('http://localhost:8080/api/hello')
-            .then(response => response.text())
-            .then(data => setMessage(data))
-            .catch(error => console.error('Error:', error));
-    };
+  const getUserName = (identity) =>
+    identity?.traits.email || identity?.traits.username;
 
-    const handleTextChange = (event) => {
-        setText(event.target.value);
-    };
+  useEffect(() => {
+    ory
+      .toSession()
+      .then(({ data }) => {
+        setSession(data);
+        ory.createBrowserLogoutFlow().then(({ data }) => {
+          setLogoutUrl(data.logout_url);
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('http://localhost:8080/api/text', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text }),
-            });
-
-            if (response.ok) {
-                alert('Text added successfully!');
-                setText('');
-            } else {
-                const errorData = await response.json();
-                alert(`Failed to add text: ${errorData.message}`);
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/app"
+            element={
+              session ? (
+                <div className="App">
+                  <header className="App-header">
+                    <img src={logo} className="App-logo" alt="logo" />
+                    <p>
+                      Welcome to Ory, {getUserName(session?.identity)}.
+                    </p>
+                    <a
+                      className="App-link"
+                      href="https://reactjs.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Learn React
+                    </a>
+                    <a href={logoutUrl}>Logout</a>
+                  </header>
+                </div>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error adding text');
-        }
-    };
-
-    return (
-        <div className="App">
-            <header className="App-header">
-                <h1>Call Spring Boot API</h1>
-                <button onClick={callApi}>Call API</button>
-                <p>{message}</p>
-                <h2>Add Text to MongoDB</h2>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        value={text}
-                        onChange={handleTextChange}
-                        placeholder="Enter text here"
-                    />
-                    <button type="submit">Add Text</button>
-                </form>
-            </header>
-        </div>
-    );
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
