@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import FileUpload from './FileUpload'; // Import the FileUpload component
 
 function Home() {
   return (
@@ -10,6 +11,7 @@ function Home() {
           <Link to="/login">Go to Login</Link>
         </p>
       </header>
+      <FileUpload /> {/* Add the FileUpload component here */}
     </div>
   );
 }
