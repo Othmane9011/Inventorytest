@@ -69,6 +69,27 @@ In the React application, the API call is made to `http://localhost:8080/api/hel
 - **Frontend**: The frontend is built using React and includes a button to call the backend API and display the response.
   - `App.js`: Contains the React component with a button that calls the backend API.
 
+# Install Docker
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose --version
+
+# Run Docker Compose
+cd /path/to/my-project
+docker-compose up -d
+
 ## Additional Notes
 
 - Ensure that both the backend and frontend are running on their respective ports (`8080` for the backend and `3000` for the frontend).
@@ -78,4 +99,5 @@ In the React application, the API call is made to `http://localhost:8080/api/hel
 ## Author
 
 Othmane Bengharbi
-Hazim Baroudi
+
+

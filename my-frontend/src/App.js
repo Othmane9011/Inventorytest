@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import FileUpload from './FileUpload';
+import './App.css';
+import Login from './components/Login'; // Adjust the path as per your project structure
+import Registration from './components/Registration'; // Adjust the path as per your project structure
 
 function App() {
     const [message, setMessage] = useState('');
@@ -41,26 +44,32 @@ function App() {
     };
 
     return (
-      <div className="App">
-          <header className="App-header">
-              <h1>Welcome to Our Application</h1>
-              <FileUpload /> {/* Add the FileUpload component here */}
-              <h1>Call Spring Boot API</h1>
-              <button onClick={callApi}>Call API</button>
-              <p>{message}</p>
-              <h2>Add Text to MongoDB</h2>
-              <form onSubmit={handleSubmit}>
-                  <input
-                      type="text"
-                      value={text}
-                      onChange={handleTextChange}
-                      placeholder="Enter text here"
-                  />
-                  <button type="submit">Add Text</button>
-              </form>
-          </header>
-      </div>
-  );
+        <div className="App">
+            <header className="App-header">
+                <h1>Welcome to Our Application</h1>
+                <FileUpload />
+                <Login /> {/* Render your login component */}
+                <Registration /> {/* Render your registration component */}
+            </header>
+            <section>
+                <h2>Call Spring Boot API</h2>
+                <button onClick={callApi}>Call API</button>
+                <p>{message}</p>
+            </section>
+            <section>
+                <h2>Add Text to MongoDB</h2>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={text}
+                        onChange={handleTextChange}
+                        placeholder="Enter text here"
+                    />
+                    <button type="submit">Add Text</button>
+                </form>
+            </section>
+        </div>
+    );
 }
 
 export default App;
